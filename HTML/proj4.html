@@ -1,0 +1,720 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3-2.6-dist/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Angler Fishing Details</title>
+        <style>
+            #interviewCount{
+                color:black;
+            }
+            input.form-control{
+                font-size:16px;
+            }
+			select.form-control{
+				font-size:16px;
+			}
+            label{
+                font-size:20px;
+            }
+
+            /**** MODAL CSS ****/
+            .modal .row{
+                margin-top:0 !important;
+            }
+            .modal-footer{
+                border:0 !important;
+            }
+            #speciesList_length{
+                margin-top:10px;
+            }
+            #speciesList_filter{
+                margin-top:10px;
+            }
+            #speciesList_info{
+                font-size:18px;
+            }
+            #speciesHead > tr th{
+                text-align:center;
+                font-size:18px !important;
+            }
+            #speciesBody > tr{
+                font-size:16px;
+            }
+            .pagination li{
+                padding:0 5px !important;
+            }
+            .pagination li a{
+                font-size:14px !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="app">
+			<nav id='bnav' class="navbar navbar-default" style="margin-bottom:10px;">
+                <div class="col-xs-3 mdc_title"><h4></h4></div>
+                <div class="col-xs-4 current_project"><h4></h4></div>
+                <div class="col-xs-2 current_date"><h4></h4></div>
+                <div class="col-xs-3 current_clerk"><h4></h4></div>
+			</nav>		
+			<div class="container-fluid" style="text-align:center">
+                <!-- Modal -->
+                <div class="modal fade bd-example-modal-lg" data-keyboard="false" data-backdrop="static" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>-->
+                                <div class="col-xs-4" style="text-align:left">
+                                    <h4 class="modal-title" id="myModalLabel" style="font-weight:bold;">FULL SPECIES LIST</h4>
+                                </div>
+								<div class="col-xs-4">
+									<a href="#" onclick="switchTables()" style="color:blue !important; text-decoration:underline">Change Species Order</a>
+								</div>
+                                <div class="col-xs-4 right-button" style="padding-right:30px">
+                                    <button type="button" class="mid-font" data-dismiss="modal" aria-label="Close">Close</button>
+                                    <!--<span aria-hidden="true">&times;</span>-->
+                                </div>
+                            </div>
+                            <div class="modal-body" style="padding:0 15px;">
+                                <div class="row col-xs-12">
+                                    <table id="speciesList" class="display table-bordered">
+                                        <thead id="speciesHead">
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Species</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="speciesBody">
+                                            
+										</tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="modal-footer">
+                                <!--<div class="left-button col-xs-6">
+                                    <button type="button" class="mid-font" data-dismiss="modal">Close</button>
+                                </div>
+                                <div class="right-button col-xs-6">
+                                    <button type="button" class="mid-font">Save changes</button>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="panel panel-default" >
+							<div class="panel-body">
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="tStart">Time Started</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <input type="time" class="form-control" id="tStart">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="tStop">Time Contact/Stopped</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <input type="time" class="form-control" id="tStop" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="fHours">Fishing Hours</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <input type="tel" class="form-control" id="fHours" placeholder="00:00 hours" readonly/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="completion">Trip Completion</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select name="trip" class="form-control dropdown" id="completion">
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="I">Incomplete</option>
+                                            <option value="C">Complete</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="zip">Zip Code</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <input type="tel" class="form-control" id="zip">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="location">Destination</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select name="location" class="form-control dropdown" id="location">
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="1">Yes</option>
+                                            <option value="2">No</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="panel panel-default">
+							<div class="panel-body">
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="satisfaction">Satisfaction</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select name="satisfaction" class="form-control dropdown" id="satisfaction">
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="1">1 - Poor</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10 - Excellent</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="race">Race</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select name="race" class="form-control dropdown" id="race">
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="W">White</option>
+                                            <option value="B">Black</option>
+                                            <option value="O">Other</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="fType">Fishing Type</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select class="form-control dropdown" id="fType" name="fType">
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="1">Boat</option>
+                                            <option value="2">Bank/Dock</option>
+                                            <option value="3">Heat Dock</option>
+                                            <option value="4">Canoe</option>
+                                            <option value="5">Wade/Belly</option>
+                                            <option value="6">Handicap</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="lure">Lure</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select class="form-control dropdown" id="lure" name="lure">
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="1">Art</option>
+                                            <option value="2">Fly</option>
+                                            <option value="3">Nat</option>
+                                            <option value="4">Prepared</option>
+                                            <option value="5">Combo</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="method">Method</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select class="form-control dropdown" id="method" name="method">
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="1">Still</option>
+                                            <option value="2">Cast</option>
+                                            <option value="3">Troll</option>
+                                            <option value="4">Drift</option>
+                                            <option value="5">Set/Radi</option>
+                                            <option value="6">Gig</option>
+                                            <option value="7">Trotline</option>
+                                            <option value="8">Jug</option>
+                                            <option value="9">Snag</option>
+                                            <option value="0">Bow</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-xs-7" style="font-size:20px;padding-right:0">
+                                        <label for="prefSpec">Preferred Species</label>
+                                    </div>
+                                    <div class="col-xs-5" style="font-size:20px; padding-left:0">
+                                        <select class="form-control dropdown" id="prefSpec" name="prefSpec" onchange="showAll(this.value)">
+                                            <!--<option value="030">030 Rainbow Trout</option>-->
+                                            <option value="999">--- SELECT ONE ---</option>
+                                            <option value="031">031 TROUT sp/pref</option>
+                                            <option value="039">039 BUFFALO sp/pref</option>
+                                            <option value="069">069 SUCKER sp/pref</option>
+                                            <option value="233">233 CATFISH sp/pref</option>
+                                            <option value="242">242 BULLHEAD sp/pref</option>
+                                            <option value="407">407 BASS sp/pref</option>
+                                            <option value="422">422 SUNFISH sp/pref</option>
+                                            <option value="432">432 CRAPPIE sp/pref</option>
+                                            <option value="555">555 FISH FOR ANYTHING</option>
+                                            <option value="all">SHOW ALL SPECIES</option>
+                                            <option value="99">Refused</option>
+                                        </select>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-xs-4 col-xs-offset-4">
+                        <a href='utilize.html'><button type="button" class="btn-block tall-button large-font">FISH CAUGHT</button></a>
+                    </div>
+                </div>
+			</div>
+
+            <div class="navbar navbar-fixed-bottom footer" style="padding-top:0; background-color:white">
+                <div class="row buttons">
+                    <div class="col-xs-2 cancelButton">
+                        <button type="button" onclick="nextPage('cancel')" class="tall-button mid-font btn-block cancel">CANCEL</button>
+                    </div>
+                    <div class="col-xs-2 refusedButton">
+                        <button type="button" onclick="nextPage('refused')" class="tall-button mid-font btn-block refused">REFUSED</button>
+                    </div>
+                    <div class="col-xs-4">
+                        <h4 id="interviewCount">Interview <span id="anglerNumber"></span> of &nbsp;<input type="number" class="form-control" style="display:inline-block; width:20%; font-size:18px" id="partySize" value="" /></h4>
+                    </div>
+                    <div class="col-xs-4">
+                        <button type="button" onclick="nextPage()" class="tall-button mid-font btn-block">NEXT PAGE</button>
+                    </div>
+                </div>
+                <div class="row timer-row">
+                    <h3 style="margin-top:10px;">Time Until: <span id="countdown"></span></h3>
+                </div>
+                <div class="row counter-row" style="font-size:14px">
+                    <!---FIRST SET--->
+                    <div class="col-xs-4" >
+                        <div class="col-xs-6" style="padding:1px">
+                            <button type="button" id="btn-count1" class='wide-button' onclick="increase()"></button>
+                        </div>
+                        <div class="col-xs-3" style="padding:10px">
+                            <input type="tel" name="fname" id='count1' class='count form-control' size="3" value="0" style="height:inherit; text-align:center; padding:1px" />
+                        </div>
+                        <div class="col-xs-3" style="padding:10px">
+                            <button type="button" class='small-button' onclick="decrease()">sub</button>
+                        </div>
+                    </div>
+                    <!---SECOND SET--->
+                    <div class="col-xs-4">
+                        <div class="col-xs-6" style="padding:1px">
+                            <button type="button" id="btn-count2" class='wide-button' onclick="increase2()"></button>
+                        </div>
+                        <div class="col-xs-3" style="padding:10px">
+                            <input type="tel" name="fname" id='count2' class='count form-control' size="3" value="0" style="height:inherit; text-align:center; padding:1px" />
+                        </div>
+                        <div class="col-xs-3" style="padding:10px">
+                            <button type="button" class='small-button' onclick="decrease2()">sub</button>
+                        </div>
+                    </div>
+                    <!---THIRD SET--->
+                    <div class="col-xs-4">
+                        <div class="col-xs-6" style="padding:1px">
+                            <button type="button" id="btn-count3" class='wide-button' onclick="increase3()"></button>
+                        </div>
+                        <div class="col-xs-3" style="padding:10px">
+                            <input type="tel" name="fname" id='count3' class='count form-control' size="3" value="0" style="height:inherit; text-align:center; padding:1px" />
+                        </div>
+                        <div class="col-xs-3" style="padding:10px">
+                            <button type="button" class='small-button' onclick="decrease3()">sub</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+		<!-- JAVASCRIPT -->
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/jquery/jquery.js"></script>
+		<script type="text/javascript" src="js/counter.js"></script>
+        <script type="text/javascript" src="js/custom.js"></script>
+		<script type="text/javascript" src="js/navbar.js"></script>
+		<script type="text/javascript" src="css/bootstrap-3.3-2.6-dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/datatables.min.js"></script>
+		<script type="text/javascript" src="js/countdown/jquery.countdown.min.js"></script>
+		<script type="text/javascript" src="js/tbody.js"></script>
+		<script type="text/javascript" src="js/jsonData.js"></script>
+		
+        <script>
+            var partySize = window.localStorage.getItem("partySize");
+            var anglerNumber = window.localStorage.getItem("anglerNumber");
+
+            // Display interview count label
+            $('document').ready(function(){
+				endSurveyCounter();
+				
+                getTable("firstLast");
+                $("#myModal").modal('hide');
+                $("#anglerNumber").text(anglerNumber);
+                $("#partySize").val(partySize);
+
+                // Set Time Contact
+                var now = new Date();
+                var hour = now.getHours();
+                if(hour.toString().length == 1){
+                    hour = "0"+hour;
+                }
+                var minute = now.getMinutes();
+                if(minute.toString().length == 1){
+                    minute = "0"+minute;
+                }
+                var time = hour + ":" + minute;
+                $("#tStop").val(time);
+
+                hideCancelButton();
+            });
+
+            function hideCancelButton(){
+                if(parseInt(anglerNumber) > 1){
+                    $(".cancelButton").addClass('hidden');
+                    $(".refusedButton").removeClass("col-xs-2");
+                    $(".refusedButton").addClass("col-xs-4");
+                } else {
+                    $(".cancelButton").removeClass('hidden');
+                }
+            }
+
+            // Open Modal when SHOW ALL SPECIES IS selected
+            function showAll(value){
+                if(value == "all"){
+                    $('#myModal').modal({
+                        show:true,
+                        keyboard:false,
+                        backdrop:"static"
+                    });
+                }
+            }
+
+            // Calculate the Fishing Hours
+            $("#tStart").on('change',function(){
+                calculateDuration();
+            });
+
+            $("#tStop").on('change',function(){
+                calculateDuration();
+            });
+
+			// Calculate difference between start and stop time
+            function calculateDuration(){
+                var start = $("#tStart").val();
+                var stop = $("#tStop").val();
+                var error = checkTime();
+                if(!error){
+                    var duration = timeDiff(stop, start); // returns string
+                    $("#fHours").val(duration);
+                } else {
+                    $("#fHours").val('');
+                }
+            }
+
+            // CALCULATE TIME DIFFERENCE
+            function timeDiff(a,b){
+                var first = a.split(":");
+                var second = b.split(":");
+
+                var xx;
+                var yy;
+
+                if(parseInt(first[0]) < parseInt(second[0])){
+                    if(parseInt(first[1]) < parseInt(second[1])){
+                        yy = parseInt(first[1]) + 60 - parseInt(second[1]);
+                        xx = parseInt(first[0]) + 24 - 1 - parseInt(second[0])
+                    }else{
+                      yy = parseInt(first[1]) - parseInt(second[1]);
+                      xx = parseInt(first[0]) + 24 - parseInt(second[0])
+                    }
+                }else if(parseInt(first[0]) == parseInt(second[0])){
+                    if(parseInt(first[1]) < parseInt(second[1])){
+                        yy = parseInt(first[1]) + 60 - parseInt(second[1]);
+                        xx = parseInt(first[0]) + 24 - 1 - parseInt(second[0])
+                    }else{
+                        yy = parseInt(first[1]) - parseInt(second[1]);
+                        xx = parseInt(first[0]) - parseInt(second[0])
+                    }
+                }else{
+                    if(parseInt(first[1]) < parseInt(second[1])){
+                        yy = parseInt(first[1]) + 60 - parseInt(second[1]);
+                        xx = parseInt(first[0]) - 1 - parseInt(second[0])
+                    }else{
+                        yy = parseInt(first[1]) - parseInt(second[1]);
+                        xx = parseInt(first[0]) - parseInt(second[0])
+                    }
+                }
+
+                // Prefix 0 to single digits
+                if(xx < 10)
+                    xx = "0" + xx;
+                if(yy < 10)
+                    yy = "0" + yy;
+
+                var duration = xx + ":" + yy + " hours";
+                return duration;
+            }
+
+            // Validate that stop time is after start time
+            function checkTime(){
+                var error = false;
+                var start = $("#tStart").val();
+                var stop = $("#tStop").val();
+
+                //Check if either value is not given
+                if(start.trim() === "" || stop.trim() === "" || start === undefined || stop === undefined){
+                    navigator.notification.alert(
+                        'Please enter valid times for Time Started and Time Contact/Stopped!', // message
+                        '',                         // callback
+                        'Warning',                  // title
+                        'OK'                        // buttonName
+                    );
+                    error = true;
+                } else { // Check if Time Contact/Stopped is after Time Started
+                    if (parseInt(stop.replace(":","")) < parseInt(start.replace(":",""))){
+                        navigator.notification.alert(
+                            'Time Started must be before Time Contact/Stopped', // message
+                            '',                                                 // callback
+                            'Warning',                                          // title
+                            'OK'                                                // buttonName
+                        );
+                        error = true;
+                    }
+                }
+                return error;
+            }
+
+            // Set species to options list
+            function selectSpecies(buttonIndex, id, species){
+                if(buttonIndex == 1){
+                    $("#prefSpec").append("<option value='" + id + "' selected>" + species + "</option>");
+                    $("#myModal").modal('hide');
+                }
+            }
+
+            // When either CANCEL, REFUSED OR NEXT PAGE is clicked
+            function nextPage(action){
+                // If Cancel or Refused
+                if(action == "refused"){
+                    navigator.notification.confirm(
+                        'Are you sure?',    // message
+                        nextAngler,          // callback
+                        'Confirm',          // title
+                        ['OK','Cancel']     // buttonName
+                    );
+                } else if(action == "cancel"){
+                    navigator.notification.confirm(
+                        'Are you sure?',    // message
+                        newParty,          // callback
+                        'Confirm',          // title
+                        ['OK','Cancel']     // buttonName
+                    );
+                } else {
+                    var error = checkTime(); // Alert box shown by checkTime()
+                    if(!error){
+                        error = validateSelect(); // validate all other fields
+                    }
+					if(error){
+						$('.dropdown').each(function(){
+							var selected = $(this).find('option:selected');
+							if(selected.val() == "999"){
+								$(this).css('color','red');
+								$(this).find('option[value="999"]').css('color','red');
+							} else {
+								$(this).css('background-color','transparent');
+								$(this).css('color','black');
+								$(this).find('option').css('color','black');
+							}
+						});
+					}
+                    else{
+                        navigator.notification.confirm(
+                            'Are you sure?',    // message
+                            onConfirm,          // callback
+                            'Confirm',          // title
+                            ['OK','Cancel']     // buttonName
+                        );
+                    }
+                }
+            }
+
+            // Validate all other fields apart from time
+            function validateSelect(){
+                var error = false;
+                var tripComp = $("#completion option:selected").val();
+                var zipCode = $("#zip").val();
+                var destination = $("#location option:selected").val();
+                var satisfaction = $("#satisfaction option:selected").val();
+                var race = $("#race option:selected").val();
+                var fishing_type = $("#fType option:selected").val();
+                var lure = $("#lure option:selected").val();
+                var method = $("#method option:selected").val();
+                var preferred = $("#prefSpec option:selected").val();
+
+                if (parseInt(tripComp) == "999" || parseInt(destination) == "999"
+                    || parseInt(satisfaction) == "999" || parseInt(race) == "999"
+                        || parseInt(fishing_type) == "999" || parseInt(lure) == "999"
+                            || parseInt(method) == "999" || parseInt(preferred) == "999"
+                                || ($.trim().zipCode == "" || isNaN(parseInt(zipCode)))){
+                    navigator.notification.alert(
+                        'Please complete all fields',   // message
+                        '',                             // callback
+                        'Warning',                      // title
+                        'OK'                            // buttonName
+                    );
+                    error = true;
+                }
+                return error;
+            }
+
+            // If Refused
+            function nextAngler(buttonIndex){
+                if(buttonIndex == 1){
+                    var partySize = window.localStorage.getItem("partySize");
+                    var anglerNumber = window.localStorage.getItem("anglerNumber");
+                    if (parseInt(anglerNumber) < parseInt(partySize)){
+                        var anglerNo = parseInt(anglerNumber) + 1;
+                        window.localStorage.setItem("anglerNumber", anglerNo.toString());
+                        window.location = "proj4.html";
+                    } else{
+                        window.location = "projCom.html";
+                    }
+                }
+            }
+
+             // If Cancelled
+            function newParty(buttonIndex){
+                if(buttonIndex == 1){
+                    window.location = "proj2.html";
+                }
+            }
+
+            // If Next Page button pressed
+            function onConfirm(buttonIndex){
+                if(buttonIndex == 1){
+                    if (parseInt(anglerNumber) < parseInt(partySize)){ // varbls declared at top of script
+                        //var anglerNo = parseInt(anglerNumber) + 1;
+                        //window.localStorage.setItem("anglerNumber", anglerNo.toString());
+                        window.location = "optional.html";
+                    } else {
+                        window.location = "optional.html"; // optional or comments
+                    }
+                }
+            }
+
+            // When party size is changed dynamically
+            $("#partySize").on('click',function(){
+                navigator.notification.confirm(
+                    'Are you sure you want to change party size?',      // message
+                    changePartySize,                                    // callback
+                    'Confirm',                                          // title
+                    ['OK','Cancel']                                     // buttonName
+                );
+            });
+
+            // Change Party Size
+            function changePartySize(buttonIndex){
+                if(buttonIndex != 1){
+                    $("#partySize").blur();
+                }
+            }
+
+            // When the user clicks out after edit
+            $("#partySize").on('focusout',function(){
+                var partySize = window.localStorage.getItem("partySize");
+                var newPartySize = $("#partySize").val();
+                if(newPartySize == partySize){
+                    return;
+                } else if ($.trim().newPartySize == ""
+                        || isNaN(parseInt(newPartySize)
+                            || parseInt(newPartySize) < partySize)){
+                    $("#partySize").val(partySize);
+                } else if (parseInt(newPartySize) > partySize){
+                    window.localStorage.setItem("partySize", newPartySize);
+                }
+            });
+			
+			// When change order pressed
+			function switchTables(){
+				var order = $('#speciesBody').hasClass("firstLast");
+				var newOrder;
+				if(order){
+					newOrder = "lastFirst";
+				} else {
+					newOrder = "firstLast";
+				}
+				getTable(newOrder);
+			}
+			
+			// Get Table Body
+			function getTable(order){
+				var table = $("#speciesList").DataTable();
+				table.destroy();
+				if(order == "firstLast"){
+					$("#speciesBody").empty();
+					$("#speciesBody").append(firstLast);
+					$("#speciesBody").removeClass("lastFirst");
+					$("#speciesBody").addClass("firstLast");
+				} else{
+					$("#speciesBody").empty();
+					$("#speciesBody").append(lastFirst);
+					$("#speciesBody").removeClass("firstLast");
+					$("#speciesBody").addClass("lastFirst");
+				}
+				$('#speciesBody').off( 'click', 'tr');
+				// When ROW in MODAL is selected
+				$("#speciesBody tr").on('click',function(){
+					var row = $(this);
+					var id = row.find('td').first().text();
+					var species = row.find('td').first().next().text();
+					var entry = 'Do you want to select ' + id + ' - ' + species + '?';
+					navigator.notification.confirm(
+						entry,                                          // message
+						function(buttonIndex){                          // callback
+							selectSpecies(buttonIndex, id, species);
+						},
+						'Confirm',                                      // title
+						['OK','Cancel']                                 // buttonName
+					);
+				});
+				$("#speciesList").DataTable();
+			}
+        </script>
+    </body>
+</html>

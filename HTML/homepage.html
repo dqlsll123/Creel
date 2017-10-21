@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3-2.6-dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Homepage</title>
+		<style>
+			/* make sidebar nav vertical */
+            .sidebar-item{
+				margin-top:15px;
+				margin-bottom:25px;
+				font-weight:bold;
+			}
+			#notification{
+                border: 0px;
+                margin-top:50px;
+            }
+			.text-muted{
+			    padding-top:20px;
+			}
+			#inside li a{
+			    color:black;
+			}
+            
+            .container-fluid{
+                width:100%;
+                position:absolute;
+                top:50%;
+                left:50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+            .footer{
+                background-color:transparent;
+                color:black;
+				border-top:0;
+				z-index:0;
+            }
+            .counter-row{
+                margin:0;
+                padding:0;
+            }
+			#spinnerBackground{
+				width:100%;
+				height:100%;
+				opacity:0.7;
+				position:fixed;
+				z-index:1;
+				background-color:white;
+				background-image: url('img/spinner.gif');
+				background-repeat:no-repeat;
+				background-position:center;
+				display:none;
+			}</style>
+    </head>
+    <body>
+		<div id="spinnerBackground" class="overlay"></div>
+		<div class="app">
+			<nav id='bnav' class="navbar navbar-default">
+                <div class="col-xs-3 mdc_title"><h4></h4></div>
+                <div class="col-xs-4 current_project"><h4></h4></div>
+                <div class="col-xs-2 current_date"><h4></h4></div>
+                <div class="col-xs-3 current_clerk"><h4></h4></div>
+			</nav>
+            <div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-4 sidebar-nav">
+						<div class="row sidebar-item">
+							<a href="projSel.html" style="padding-top:0"><input type="button" class="tall-button btn-block" value="SELECT SURVEY" /></a></li>
+						</div>
+						<div class="row sidebar-item">
+							<a href="utilities.html"><input type="button" class="tall-button btn-block" value="UTILITIES" /></a>
+						</div>
+<!--						<div class="row sidebar-item">-->
+<!--							<a><input onclick="practice()" type="button" class="tall-button btn-block" value="PRACTICE SURVEY" /></a>-->
+<!--						</div>-->
+                        <div class="row sidebar-item">
+                            <a href='proj1Grid.html'><input type="button" class="tall-button btn-block" value="PRACTICE SURVEY" /></a>
+                        </div>
+						<div class="row sidebar-item">
+							<a href="#"><input type="button" onclick="upload()" class="tall-button btn-block" value="UPLOAD DATA" /></a>
+						</div>
+						<div class="row sidebar-item">
+							<a href="previous.html"><input type="button" class="tall-button btn-block" value="PREVIOUS SURVEYS" /></a>
+						</div>
+					</div>
+					<div class="col-xs-8">
+						<div class=" panel panel-default" id="notification" >
+                            <h2 align="center">NEXT SURVEY</h2>
+                            <a href='#'>
+                                <button id="surveyButton" onclick="nextPage($(this))" type="button" class="btn-block" style="color:black; border-radius:0px; height:200px">
+                                    <h1 id="surveyTime" style="text-align:center">1PM-4PM</h1>
+                                    <h2 id="location" style="text-align:center">Bob's Dock</h2>
+                                    <h2 style="text-align:center">Start Survey</h2>
+                                </button>
+                            </a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="navbar navbar-fixed-bottom footer">
+				<div class="row" style="padding-right:10px; padding-left:10px">
+					<div class="col-xs-4 left-button">
+						<a onclick="logout()" href="#"><input type="button" class="tall-button btn-block" value="CHANGE LOGIN" /></a>
+					</div>
+					<div class="col-xs-8 right-button">
+						<h2 align="right">Time Until <span id="countdown"></span></h2>
+					</div>
+				</div>
+				<div class="row counter-row">
+					<h1><input type="hidden" value=""/></h1>
+				</div>
+			</div>
+        </div>
+        
+        <!-- JAVASCRIPT -->
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/jquery/jquery.js"></script>
+		<script type="text/javascript" src="js/dateformat.js"></script>
+		<script type="text/javascript" src="js/counter.js"></script>
+        <script type="text/javascript" src="js/custom.js"></script>
+		<script type="text/javascript" src="js/navbar.js"></script>
+		<script type="text/javascript" src="js/jsonData.js"></script>
+		<script type="text/javascript" src="js/countdown/jquery.countdown.min.js"></script>
+		
+        <script type="text/javascript">
+			app.initialize();
+		</script>
+		<script type="text/javascript" src="css/bootstrap-3.3-2.6-dist/js/bootstrap.min.js"></script>
+		<script>
+			$(document).ready(function(){
+				var project = window.localStorage.getItem("currentProject");
+				var locArray = getCreelLocation(project);
+				$("#location").text(locArray);
+				var projSchedule = getProjTime(project);
+				var startTime = projSchedule[0];
+				var stopTime = projSchedule[1];
+				
+				// Set Time Contact
+                var now = new Date();
+				// If survey hasn't started
+				if(now < new Date(startTime)){
+					$("#surveyTime").text("Starts on: " + dateFormat(startTime,"mmm. dd, yyyy"));
+					$("#surveyButton").addClass('disabled');
+					nextSurveyCounter("start", startTime);
+				} // If survey started but has not ended, i.e. currently running
+				else if(now > new Date(startTime) && now < new Date(stopTime)){
+					$("#surveyTime").text("Ends on: " + dateFormat(stopTime,"mmm. dd, yyyy"));
+					$("#surveyButton").removeClass('disabled');
+					nextSurveyCounter("stop", stopTime);
+				} // If survey has ended
+				else {
+					$("#surveyTime").text("--/--/-- --:--:--");
+					$("#countdown").text("--/--/-- --:--:--");
+					//$("#countdown").text("Expired");
+					$("#surveyButton").addClass('disabled');
+				}
+			});
+
+            function upload(){
+				$("#spinnerBackground").show();
+				setTimeout(function() {
+					$('#spinnerBackground').fadeOut('fast');
+					navigator.notification.alert(
+						'Successfully Uploaded',  	// message
+						'',         				// callback
+						'Confirm',            		// title
+						'OK'                  		// buttonName
+					);
+				}, 1500); //
+				
+            }
+
+            function practice(){
+                window.localStorage.setItem("practice","practice");
+                window.location = "proj1.html";
+            }
+			
+			function nextPage(button){
+				if(button.hasClass('disabled')){
+					window.localStorage.setItem("partyCount","0");
+					window.location = "proj1.html";
+				} else {
+					navigator.notification.alert(
+						'Survey has not been scheduled! Select different project',  	// message
+						'',         				// callback
+						'Confirm',            		// title
+						'OK'                  		// buttonName
+					);
+				}
+			}
+		</script>
+    </body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Optional</title>
+		<!-- STYLING -->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3-2.6-dist/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <style>
+            h3{
+                margin-top:10px;
+            }
+			select.form-control, input.form-control{
+				font-size:20px;
+			}
+			.container-fluid{
+				height:450px;
+				overflow-y:scroll;
+			}
+        </style>
+    </head>
+    <body>
+		<div class="app">
+			<nav id='bnav' class="navbar navbar-default">
+				<div class="col-xs-3 mdc_title"><h4></h4></div>
+				<div class="col-xs-4 current_project"><h4></h4></div>
+				<div class="col-xs-2 current_date"><h4></h4></div>
+				<div class="col-xs-3 current_clerk"><h4></h4></div>
+			</nav>		
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-12 col-centered text-center">
+						<div class="panel panel-default" >
+							<div class="panel-body">
+								<div class="form-group initial">
+									<div class="row" style="text-align:left">
+										<label for="opt1">Have we surveyed you before?</label>
+									</div>
+									<div class="row">
+										<select id="survey" class="dropdown form-control">
+											<option value="999">--- Select One ---</option>
+											<option value="1">Yes</option>
+											<option value="2">No</option>
+										</select>
+									</div>
+								</div>
+								<hr class="optional"/>
+								<div class="form-group">
+									<div class="row" style="text-align:left">
+										<label for="opt2">How many years have you been fishing in Wappapello Lake?</label>
+									</div>
+									<div class="row">
+										<input type="number" id="years" class="form-control" placeholder="" />
+									</div>
+								</div>
+								<hr class="optional"/>
+								<div class="form-group">
+									<div class="row" style="text-align:left">
+										<label for="opt2">Which fish is the Black Crappie?</label>
+									</div>
+									<div class="row">
+										<select id="crappie" class="dropdown form-control">
+											<option value="999">--- Select One ---</option>
+											<option value="1">A</option>
+											<option value="2">B</option>
+										</select>
+									</div>
+								</div>
+								<hr class="optional"/>
+								<div class="form-group">
+									<div class="row" style="text-align:left">
+										<label for="opt2">Do you think the current 9 inch minimum length limit and 30 fish daily crappie regulation has improved the crappie fishing at the lake?</label>
+									</div>
+									<div class="row">
+										<select id="limit" class="dropdown form-control">
+											<option value="999">--- Select One ---</option>
+											<option value="1">Yes</option>
+											<option value="2">No</option>
+											<option value="3">Unsure</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="navbar navbar-fixed-bottom footer" style="padding-top:0">
+                <div class="row buttons">
+                    <div class="col-xs-6 left-button"><button type="button" onclick="back()" class="large-button large-font">BACK</button></div>
+                    <div class="col-xs-6 right-button"><button type="button" onclick="nextPage()" class="large-button large-font">NEXT PAGE</button></div>
+                </div>
+				<div class="row timer-row">
+					<h3 style="margin-top:10px;">Time Until: <span id="countdown"></span></h3>
+				</div>
+				<div class="row counter-row" style="font-size:14px">
+					<!---FIRST SET--->
+					<div class="col-xs-4" >
+						<div class="col-xs-6" style="padding:1px">
+							<button type="button" id="btn-count1" class='wide-button' onclick="increase()"></button>
+						</div>
+						<div class="col-xs-3" style="padding:10px">
+							<input type="tel" name="fname" id='count1' class='count form-control' size="3" value="0" style="height:inherit; text-align:center; padding:1px" />
+						</div>
+						<div class="col-xs-3" style="padding:10px">
+							<button type="button" class='small-button' onclick="decrease()">sub</button>
+						</div>
+					</div>
+					<!---SECOND SET--->
+					<div class="col-xs-4">
+						<div class="col-xs-6" style="padding:1px">
+							<button type="button" id="btn-count2" class='wide-button' onclick="increase2()"></button>
+						</div>
+						<div class="col-xs-3" style="padding:10px">
+							<input type="tel" name="fname" id='count2' class='count form-control' size="3" value="0" style="height:inherit; text-align:center; padding:1px" />
+						</div>
+						<div class="col-xs-3" style="padding:10px">
+							<button type="button" class='small-button' onclick="decrease2()">sub</button>
+						</div>
+					</div>
+					<!---THIRD SET--->
+					<div class="col-xs-4">
+						<div class="col-xs-6" style="padding:1px">
+							<button type="button" id="btn-count3" class='wide-button' onclick="increase3()"></button>
+						</div>
+						<div class="col-xs-3" style="padding:10px">
+							<input type="tel" name="fname" id='count3' class='count form-control' size="3" value="0" style="height:inherit; text-align:center; padding:1px" />
+						</div>
+						<div class="col-xs-3" style="padding:10px">
+							<button type="button" class='small-button' onclick="decrease3()">sub</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+        
+		
+		<!-- JAVASCRIPT -->
+		<script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/jquery/jquery.js"></script>
+		<script type="text/javascript" src="js/counter.js"></script>
+		<script type="text/javascript" src="js/custom.js"></script>
+		<script type="text/javascript" src="js/counter_labels.js"></script>
+		<script type="text/javascript" src="js/navbar.js"></script>
+		<script type="text/javascript" src="js/countdown/jquery.countdown.min.js"></script>
+		<script type="text/javascript" src="js/timer.js"></script>
+		
+		<script type="text/javascript">
+			function onFail(message) {
+				//alert('Failed because: ' + message);
+			}
+        </script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+		<script>
+			$(document).ready(function(){
+				endSurveyCounter();
+				var count = 0;
+				$('.form-group').each(function(){
+					if(count > 0){
+						$(this).addClass('hidden');
+					}
+					count++;
+				});
+				$(".optional").addClass('hidden');
+			});
+			
+			$('#survey').change(function(){
+				var val = $("#survey option:selected").val();
+				if(val == "2"){
+					$('.form-group').each(function(){
+						if($(this).hasClass('hidden')){
+							$(this).removeClass('hidden');
+						}
+					});
+					$(".optional").removeClass('hidden');
+				} else {
+					$('.form-group').each(function(){
+						if(!$(this).hasClass('initial')){
+							$(this).addClass('hidden');
+						}
+					});
+					$(".optional").addClass('hidden');
+				}
+			});
+
+            function nextPage(){
+				var error = validateOptionalFields();
+				if(!error){
+					navigator.notification.confirm(
+						'Are you sure?',  // message
+						onConfirm,        // callback
+						'Confirm',        // title
+						['OK','Cancel']   // buttonName
+					);
+				}
+            }
+
+			function onConfirm(buttonIndex){
+			    if(buttonIndex == 1){
+                    var partySize = window.localStorage.getItem("partySize");
+                    var anglerNumber = window.localStorage.getItem("anglerNumber");
+                    if (parseInt(anglerNumber) < parseInt(partySize)){
+                        var anglerNo = parseInt(anglerNumber) + 1;
+                        window.localStorage.setItem("anglerNumber", anglerNo.toString());
+                        window.location = "proj4.html";
+                    } else {
+                        window.location = "projCom.html";
+                    }
+                }
+			}
+			
+			function validateOptionalFields(){
+				var error = false;
+				var survey = $("#survey option:selected").val();
+				var years = $("#years").val();
+				var crappie = $("#crappie option:selected").val();
+				var limit = $("#limit option:selected").val();
+				if(survey == "999"){
+					navigator.notification.alert(
+						'Invalid option for Question 1',  // message
+						'',        // callback
+						'Confirm',        // title
+						'OK'   // buttonName
+					);
+					error = true;
+				} else if(survey == "1"){
+					if(years == "" || years == null || crappie == "999" || limit == "999"){
+						navigator.notification.alert(
+							'Please enter valid fields',  	// message
+							'',        						// callback
+							'Confirm',        				// title
+							'OK'   							// buttonName
+						);
+						error = true;
+					}
+				}
+				return error;
+			}
+		</script>
+    </body>
+</html>

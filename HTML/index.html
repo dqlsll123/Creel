@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <title>Login to MDC</title>
+        <!--EXTERNAL CSS-->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3-2.6-dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <style>
+            h1{
+                font-size:50px;
+                margin-bottom:50px;
+            }
+            .container-fluid{
+                width:50%;
+                position: fixed;
+                top: 55%;
+                left: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+            .buttons{
+                margin-top:20px;
+            }
+            .labels{
+                text-align:center;
+            }
+            .buttons > a{
+                text-decoration:underline;
+                color:blue !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid col-centered">
+            <h1 align="center">MDC CREEL APP</h1>
+            <div class="row form-group userInput">
+                <div class="col-xs-3 labels">
+                    <label for="username">Clerk</label>
+                </div>
+                <div class="col-xs-9">
+                    <input type="text" class="form-control" id="username" placeholder="Enter User ID">
+                </div>
+            </div>
+            <div class="row form-group selectUser">
+                <div class="col-xs-3 labels">
+                    <label for="selectUser">Clerk</label>
+                </div>
+                <div class="col-xs-9">
+                    <select id ="selectUser" class="selectUser form-control"></select>
+                </div>
+            </div>
+			
+			<!--<div class="hidden">
+				<input id="fileLoad" type="files" onclick="readExcel()" />
+			</div>-->
+			
+            <div class="row form-group selectProject">
+                <div class="col-xs-3 labels">
+                    <label for="selectProject">Projects</label>
+                </div>
+                <div class="col-xs-9">
+                    <select id ="selectProject" class="form-control"></select>
+                </div>
+            </div>
+            <div class="row form-group buttons col-centered" style="text-align:center">
+                <button type="button" class="btn-block large-button large-font" onclick="login()">SIGN IN</button><br/>
+                <a href="#" onclick="userList()" id="changeSignIn">Sign in with existing account</a>
+            </div>
+            <div class="row" style="text-align:center; margin-top:20px">
+                <img src="img/logo.png" />
+            </div>
+        </div>
+        
+        <!--EXTERNAL JAVASCRIPT-->
+        <script type="text/javascript" src="js/jquery/jquery.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/jsonData.js"></script>
+        <!--<script type="text/javascript" src="database/database.js"></script>-->
+
+        <!--INTERNAL JAVASCRIPT-->
+        <script type="text/javascript" charset="utf-8">
+			/** GLOBAL VARIABLE **/
+			var usernameList;
+
+			/** ON PAGE LOAD **/
+			$(document).ready(function(){
+			    //loadProjects();
+				loadProjectList();
+                window.localStorage.removeItem("practice");
+				var recordList = window.localStorage.getItem("recordList");
+				
+				// To remove all data from localStorage
+				//localStorage.clear();
+
+				// Pre-set JSON usernameList
+				usernameList = window.localStorage.getItem("usernameList");
+
+				// Check if username item in localStorage exists or not
+				if(usernameList == null){
+					$('.selectUser').addClass('hidden');
+					$('#changeSignIn').addClass('hidden');
+				} else {
+					// Hide the input text field and change sign in option
+					$('.userInput').addClass('hidden');
+                    $('#changeSignIn').addClass('hidden');
+
+					// Parse the usernameList to an array of usernames
+					var arrayObj = JSON.parse(usernameList);
+
+					// Remove any existing options in the select option list
+					$('#selectUser').find('option').remove();
+
+					// Add options to the username select menu
+					$('#selectUser').append("<option value='000'>--- Select One ---</option>");
+					$.each(arrayObj, function(key, value) {
+						 $('#selectUser').append($("<option></option>").attr("value",key).text(value));
+					 });
+					 $('#selectUser').append("<option value='new'>Sign In With Different Name</option>");
+				}
+
+				//getJSONData();
+			});
+
+			// IF NEW USER BUTTON IS PRESSED
+			$("#selectUser").on('change',function(){
+			    var option = $("#selectUser option:selected").val();
+			    if(option.toLowerCase() == "new"){
+			        $('.selectUser').addClass('hidden');
+			        $('.userInput').removeClass('hidden');
+			        $('#changeSignIn').removeClass('hidden');
+			        $("#selectUser").find('option:first').prop('selected',true);
+			    }else{
+			        $('.userInput').addClass('hidden');
+			        $('#changeSignIn').addClass('hidden');
+			        $('.selectUser').removeClass('hidden');
+			    }
+			});
+
+            // REVERT BACK TO USER LIST
+			function userList(){
+				$('.userInput').addClass('hidden');
+				$('#changeSignIn').addClass('hidden');
+                $('.selectUser').removeClass('hidden');
+			}
+
+			/** On Click of Login Button **/
+			function login(){
+			    var projID = $("#selectProject option:selected").attr("id");
+			    if(projID == "999"){
+			        navigator.notification.alert(
+                        'Select a valid project',   // message
+                        '',                         // callback
+                        'Confirm',                  // title
+                        'OK'                        // buttonName
+                    );
+			    } else {
+                    var selectedProject = $("#selectProject option:selected").text();
+                    var projType = $("#selectProject option:selected").attr("creel-type");
+                    window.localStorage.setItem("currentProject",selectedProject);
+                    window.localStorage.setItem("creelType",projType);
+
+                    // Check if dropdown or input type
+                    var select = $(".selectUser").hasClass('hidden');
+                    var input = $(".userInput").hasClass('hidden');
+
+                    if(input){
+                        //if(usernameList != null && usernameList.length>0){
+                        var selectedUser = $("#selectUser option:selected").text();
+                        var selectedUserID = $("#selectUser option:selected").attr("value");
+                        if(selectedUserID == "000"){
+                            navigator.notification.alert(
+                                'Select a valid user',      // message
+                                '',                         // callback
+                                'Confirm',                  // title
+                                'OK'                        // buttonName
+                            );
+                        } else {
+                            window.localStorage.setItem("currentUser",selectedUser);
+                            window.location = 'homepage.html';
+                        }
+                    } else { // (!input)
+                        inputUser = document.getElementById('username').value;
+                        inputUser = $.trim(inputUser);
+
+                        // Add new user to localStorage, if does not exist
+                        if($.trim(inputUser) != ""){
+
+                            // Parse usernameList to array of usernames
+                            var usernameArray = JSON.parse(usernameList);
+                            if(usernameArray != null){
+                                var matched = false;
+                                for (var i = 0; i<usernameArray.length; i++){
+                                    if(inputUser == usernameArray[i] && !matched){
+                                        matched = true;
+                                    } // end if-else (username!=null)
+                                } // end for loop
+                                if(matched){
+                                    navigator.notification.alert(
+                                        'Username already exists! Press sign in with existing account!',  // message
+                                        '',                         // callback
+                                        'Confirm',                  // title
+                                        'OK'                        // buttonName
+                                    );
+                                } else{
+                                    usernameArray.push(inputUser);
+                                    window.localStorage.setItem("usernameList", JSON.stringify(usernameArray));
+                                    window.localStorage.setItem("currentUser", inputUser);
+                                    window.location = 'homepage.html';
+                                }
+                            } else { // create new username list
+                                var usernameArray = [];
+                                usernameArray.push(inputUser);
+                                window.localStorage.setItem("currentUser", inputUser);
+                                window.localStorage.setItem("usernameList", JSON.stringify(usernameArray));
+                                window.location = 'homepage.html';
+                            } // end if-else (inputUser != "")
+                        }// if (inputUser)
+                        else {
+                            navigator.notification.alert(
+                                'Enter username',  // message
+                                '',                // callback
+                                'Confirm',         // title
+                                'OK'               // buttonName
+                            );
+                        }
+                    } // end if-else (usernameList)
+                } // end if-else (projID == 999)
+			}
+
+			function loadProjectList(){
+				$("#selectProject").empty();
+				$("#selectProject").append("<option id='999'>--- Select One ---</option>");
+				for(var i=0; i<projectList.length; i++){
+					$("#selectProject").append("<option id=''>"+projectList[i]+"</option>");
+				}
+			}
+			
+            /*function loadProjects(){
+                var queryID = "1";
+			    var queryColumn = "projectUID";
+			    var columnList = ["projectUID","projectName"];
+			    var table = "tblProjects";
+			    var sendData = {"id":id, "column":column, "table":table, "columnList":columnList};
+                $.ajax({
+                    url:"https://dslsrv8.cs.missouri.edu/~nc5ff/creelDB/selectQuery.php",
+                    data: sendData,
+                    dataType: "json",
+                    method:"POST",
+                    success:function(response){
+                        console.log(JSON.stringify(response));
+                    },
+                    error: function(xhr, status, error){
+                        console.log(error + " " + JSON.stringify(xhr) + " " + status);
+                    }
+                });
+            }
+
+			function getJSONData(){
+			    var id = "1";
+			    var column = "projectUID";
+			    var table = "tblProjects";
+			    var sendData = {"id":id, "column":column, "table":table};
+
+                $.ajax({
+                    url:"https://dslsrv8.cs.missouri.edu/~nc5ff/creelDB/selectQuery.php",
+                    data: sendData,
+                    dataType: "json",
+                    method:"POST",
+                    success:function(response){
+                        console.log(JSON.stringify(response));
+                    },
+                    error: function(xhr, status, error){
+                        console.log(error + " " + JSON.stringify(xhr) + " " + status);
+                    }
+                });
+			}*/
+        </script>
+    </body>
+</html>

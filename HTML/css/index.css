@@ -1,0 +1,284 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+.row{
+    margin:10px 0 1px 0;
+}
+
+.footer > .row{
+    margin:0;
+}
+
+body {
+    /* Margin bottom by footer height
+    margin-bottom: 60px;*/
+    background-color:white;/*#66A3FF;*//*#768BA3;*/
+    font-family:calibri, arial;
+    color:black;
+/*    -webkit-user-select: none;*/
+/*    -moz-user-select: -moz-none;*/
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input, textarea {
+     //-moz-user-select: text;
+}
+
+input[type="button"]{
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+input[type="number"], input[type="text"]{
+    font-size:18px;
+}
+
+/************** MEDIA QUERIES ***************/
+@media (min-width:800px){
+    h4{
+        font-size:22px;
+    }
+    .container-fluid{
+        height:500px;
+        overflow-y:auto;
+    }
+    .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+    }
+    .sidebar-nav .navbar ul {
+        float: none;
+    }
+    .sidebar-nav .navbar ul:not {
+        display: block;
+    }
+    .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+    }
+    .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
+
+@media (min-width:1300px){
+    .container-fluid{
+        height:575px;
+        overflow-y:auto;
+    }
+}
+/************ TITLE **************/
+.mdc_title{
+    border-right:1px solid white;
+}
+
+.mdc_title > h4{
+    font-weight:bold;
+}
+
+/********** NAVBAR *************/
+.navbar{
+    min-height:0;
+    margin-top:20px; /* 20px for iOS */
+}
+
+a.app_title{
+    color:black;
+    text-transform:uppercase;
+    color:#d3eea7;
+}
+
+a.app_title:hover{
+    color:black;
+    text-transform:uppercase;
+}
+
+#bnav{
+    background-color: #3a5d0a; /*#82C09A;/*#82BD6F;*//*#75B53A;*/
+    //background-color: linear-gradient(to right,#3a5d0a 0%,#214105 100%);
+    border-radius:0;
+    border:0;
+    border-bottom:1px solid white;
+    padding-left:10px;
+    color:#d3eea7;
+}
+#bnav div{
+    text-align:center;
+}
+.current_county{
+    //border-right:1px solid white;
+}
+.current_date{
+    //border-right:1px solid white;
+}
+.current_tod{
+    text-align:right;
+    padding-right:30px
+}
+
+/*********** GENERAL **********/
+a, p{
+    font-size:20px;
+    color:black !important;
+}
+
+a:hover, a:focus, a:active, a:visited{
+    color:black;
+    text-decoration:none;
+}
+
+/********* FONT SIZE ********/
+.large-font{
+    font-size:22px;
+}
+
+.mid-font{
+    font-size:18px;
+}
+
+.small-font{
+    font-size: 14px;
+}
+/********* BUTTONS *********/
+button{
+    color:black !important;
+}
+
+.large-button{
+    padding-left:20px;
+    padding-right:20px;
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.right-button{
+    text-align:right;
+    padding-right:10px;
+}
+
+.left-button{
+    text-align:left;
+    padding-left:20px;
+}
+
+.wide-button{
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.small-button{
+    font-size:18px;
+}
+
+.btn, h4, label{
+    font-size: 22px;
+}
+
+.btn{
+    background-color:#CCC;
+    color:black;
+    border:1px solid #808080;
+}
+
+.tall-button{
+    padding-top:10px !important;
+    padding-bottom:10px !important;
+}
+
+.mid-button{
+    padding-top:5px !important;
+    padding-bottom:5px !important;
+    font-size:15px;
+}
+
+.header-button{
+    padding-top:20px !important;
+    padding-bottom:20px !important;
+    font-size:30px;
+}
+
+.buttons{
+    background-color:transparent;
+    padding-bottom:10px;
+}
+
+.refused{
+    color:red !important;
+}
+
+.cancel{
+    font-weight:bold;
+}
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container {
+    width: auto;
+    max-width: 680px;
+    padding: 0 15px;
+}
+.container .text-muted {
+    margin: 20px 0;
+}
+
+#add{
+    background-color:green;
+}
+
+/********* FOOTER **********/
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color:#d3eea7;
+    //background-color: #3a5d0a;/*#f5f5f5;*/
+    padding-top:0px;
+    padding-bottom:0px;
+    border-top:1px solid white;
+    text-align:center;
+
+    /* Set the fixed height of the footer here */
+    /*height: 60px;
+    padding-right:35px;
+    padding-left:50px;*/
+}
+
+.timer-row{
+    background-color:#C0C0C0;
+    margin-top:0;
+    padding-top:0;
+    text-align:right;
+    margin-left:0;
+    margin-right:0;
+    padding-right:10px;
+    color:black;
+}
+
+.count{
+    font-size:20px;
+    display:inline-block;
+}
+
+.counter-row{
+    padding-top:5px;
+    padding-bottom:5px;
+    margin-left:0;
+    margin-right:0;
+    /*font-size:14px;*/
+    background-color: #3a5d0a;
+}
+
+/************ SELECT *************/
+select.form-control{
+	font-size:18px;
+	padding:0 0 0 10px;
+}
